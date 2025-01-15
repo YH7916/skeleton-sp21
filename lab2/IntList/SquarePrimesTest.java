@@ -10,11 +10,11 @@ public class SquarePrimesTest {
      * It passes, but the starter code implementation of isPrime
      * is broken. Write your own JUnit Test to try to uncover the bug!
      */
+
     @Test
-    public void testSquarePrimesSimple() {
-        IntList lst = IntList.of(14, 15, 16, 17, 18);
+    public void testSquarePrimesComplex() {
+        IntList lst = IntList.of(3, 5, 14, 17, 20);
         boolean changed = IntListExercises.squarePrimes(lst);
-        assertEquals("14 -> 15 -> 16 -> 289 -> 18", lst.toString());
-        assertTrue(changed);
+        assertEquals("9 -> 25 -> 14 -> 289 -> 20", lst.toString());
     }
 }
