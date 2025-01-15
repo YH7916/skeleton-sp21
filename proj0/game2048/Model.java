@@ -5,7 +5,7 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author YH
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -111,9 +111,56 @@ public class Model extends Observable {
         changed = false;
 
         // TODO: Modify this.board (and perhaps this.score) to account
+        board.setViewingPerspective(side);
+        int size = board.size();
+
+        // 对于每一列，先找到能向上移动的最大位置（找空格数）
+        for(int col = 0; col < size; col ++) {
+            for (int row = size - 2; row >= 0; row--) {
+                int nulltile = 0;
+                Tile t = board.tile(col, row);
+                if(t != null) {
+                    for(int row_before = row + 1; row_before < size; row_before ++){
+                        if(tile(col, row_before) == null)
+                            nulltile ++;
+                    }
+                    board.move(col, row + nulltile, t);
+                    changed = true;
+                }
+            }
+        }
+        for(int col = 0; col < size; col ++){
+            for(int row = size - 2; row >= 0; row --){
+                Tile t1 = board.tile(col, row);
+                if(t1 != null){
+                    Tile t2 = board.tile(col, row + 1);
+                    if(t2 != null && t1.value() == t2.value()){
+                        board.move(col, row + 1, t1);
+                        changed = true;
+                        score += 2 * t2.value();
+                    }
+                }
+            }
+        }
+        for(int col = 0; col < size; col ++) {
+            for (int row = size - 2; row >= 0; row--) {
+                int nulltile = 0;
+                Tile t = board.tile(col, row);
+                if(t != null) {
+                    for(int row_before = row + 1; row_before < size; row_before ++){
+                        if(tile(col, row_before) == null)
+                            nulltile ++;
+                    }
+                    board.move(col, row + nulltile, t);
+                    changed = true;
+                }
+            }
+        }
+
+        board.setViewingPerspective(Side.NORTH);
+
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
-
         checkGameOver();
         if (changed) {
             setChanged();
@@ -138,6 +185,12 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        for(int i = 0; i < b.size(); i++) {
+            for(int j = 0; j < b.size(); j++) {
+                if(b.tile(i,j) == null)
+                    return true;
+            }
+        }
         return false;
     }
 
@@ -148,20 +201,56 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        int MAX_PIECE = 2048;
+        for(int i = 0; i<b.size(); i++)
+        {
+            for(int j = 0; j < b.size(); j++)
+            {
+                if(b.tile(i,j) != null && b.tile(i,j).value() == MAX_PIECE)
+                    return true;
+            }
+        }
         return false;
     }
 
     /**
      * Returns true if there are any valid moves on the board.
-     * There are two ways that there can be valid moves:
-     * 1. There is at least one empty space on the board.
-     * 2. There are two adjacent tiles with the same value.
+     *      * There are two ways that there can be valid moves:
+     *      * 1. There is at least one empty space on the board.
+     *      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        for (int i = 0; i < b.size(); i++) {
+            for (int j = 0; j < b.size(); j++) {
+                // 如果当前位置是空的，跳过
+                if(b.tile(i,j) == null) {
+                    continue;
+                }
+
+                // 获取当前值
+                int currentValue = b.tile(i,j).value();
+
+                // 检查四个方向
+                // 向右检查
+                if(i + 1 < b.size() && (b.tile(i+1,j) == null || b.tile(i+1,j).value() == currentValue)) {
+                    return true;
+                }
+                // 向左检查
+                if(i - 1 >= 0 && (b.tile(i-1,j) == null || b.tile(i-1,j).value() == currentValue)) {
+                    return true;
+                }
+                // 向下检查
+                if(j + 1 < b.size() && (b.tile(i,j+1) == null || b.tile(i,j+1).value() == currentValue)) {
+                    return true;
+                }
+                // 向上检查
+                if(j - 1 >= 0 && (b.tile(i,j-1) == null || b.tile(i,j-1).value() == currentValue)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
-
 
     @Override
      /** Returns the model as a string, used for debugging. */
