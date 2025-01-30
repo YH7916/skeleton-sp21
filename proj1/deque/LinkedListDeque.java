@@ -44,6 +44,7 @@ public class LinkedListDeque<T> implements Deque<T>,Iterable<T>{
         newNode.prev = sentinel.prev;
         newNode.next = sentinel;
         sentinel.prev = newNode;
+        size++;
     }
 
     public T removeFirst() {
