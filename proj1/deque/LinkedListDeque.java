@@ -2,19 +2,6 @@ package deque;
 
 import java.util.Iterator;
 
-interface Deque<T>
-{
-    public boolean isEmpty();
-    public int size();
-    public void addFirst(T item);
-    public void addLast(T item);
-    public T removeFirst();
-    public T removeLast();
-    public void printDeque();
-    public T get(int index);
-    public boolean equals(Object o);
-}
-
 public class LinkedListDeque<T> implements Deque<T>,Iterable<T>{
     // 首先定义节点类
     private class Node {
@@ -72,6 +59,7 @@ public class LinkedListDeque<T> implements Deque<T>,Iterable<T>{
         return removedItem;
     }
 
+    @Override
     public T removeLast() {
         if (size == 0) {
             return null;
