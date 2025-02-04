@@ -110,4 +110,23 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     public Iterator<K> iterator() {
         throw new UnsupportedOperationException();
     }
+
+    public void printInOrder(){
+        printInOrder(root);
+    }
+
+    private void printInOrder(Node node) {
+        if (node == null) {
+            return;  // 基本情况：如果节点为空，直接返回
+        }
+
+        // 递归遍历左子树
+        printInOrder(node.left);
+
+        // 打印当前节点的值
+        System.out.println(node.key);  // 或者 System.out.println(node.key + " -> " + node.value);
+
+        // 递归遍历右子树
+        printInOrder(node.right);
+    }
 }
