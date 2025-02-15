@@ -236,4 +236,13 @@ class Utils {
         System.out.printf(msg, args);
         System.out.println();
     }
+
+    /**
+     * 打印错误信息并退出程序
+     * @param message 要打印的错误信息
+     */
+    public static void exitWithError(String message) {
+        System.out.println(message);
+        System.exit(0);
+    }
 }

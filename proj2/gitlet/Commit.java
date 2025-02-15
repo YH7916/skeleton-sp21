@@ -1,26 +1,60 @@
+// Commit.java
 package gitlet;
 
-// TODO: any imports you need here
-
-import java.util.Date; // TODO: You'll likely use this in this class
+import java.io.Serializable;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 /** Represents a gitlet commit object.
- *  TODO: It's a good idea to give a description here of what else this Class
- *  does at a high level.
- *
- *  @author TODO
+ *  @author [你的名字]
  */
-public class Commit {
-    /**
-     * TODO: add instance variables here.
-     *
-     * List all instance variables of the Commit class here with a useful
-     * comment above them describing what that variable represents and how that
-     * variable is used. We've provided one example for `message`.
-     */
-
+public class Commit implements Serializable {
     /** The message of this Commit. */
     private String message;
+    /** The timestamp of this Commit. */
+    private String timestamp;
+    /** The parent reference of this Commit. */
+    private String parent;
+    /** The second parent reference of this Commit (for merges). */
+    private String secondParent;
+    /** The files tracked by this commit (filename -> blob id). */
+    private Map<String, String> blobs;
 
-    /* TODO: fill in the rest of this class. */
+    /** Create a new Commit. */
+    public Commit(String message, String parent, String secondParent) {
+        this.message = message;
+        this.parent = parent;
+        this.secondParent = secondParent;
+        this.blobs = new TreeMap<>();
+
+        if (parent == null) {
+            this.timestamp = "Thu Jan 1 00:00:00 1970 -0800";
+        } else {
+            SimpleDateFormat formatter =
+                    new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.US);
+            this.timestamp = formatter.format(new Date());
+        }
+    }
+
+    /** 从父commit继承文件. */
+    public void inheritFromParent(Commit parent) {
+        if (parent != null) {
+            blobs.putAll(parent.getBlobs());
+        }
+    }
+
+    /** 返回这个提交的SHA-1标识符. */
+    public String getID() {
+        return Utils.sha1(Utils.serialize(this));
+    }
+
+    // Getters
+    public String getMessage() { return message; }
+    public String getTimestamp() { return timestamp; }
+    public String getParent() { return parent; }
+    public String getSecondParent() { return secondParent; }
+    public Map<String, String> getBlobs() { return blobs; }
 }
